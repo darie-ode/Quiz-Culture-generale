@@ -1,0 +1,12 @@
+[
+    {
+        "nom": "Pierre",
+        "score": 2,
+        "total": 10
+    },
+    {
+        "nom": "ivie",
+        "score": 5,
+        "total": 10
+    }
+]

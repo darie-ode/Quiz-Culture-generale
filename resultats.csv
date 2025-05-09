@@ -1,0 +1,79 @@
+import csv
+import os
+
+# Fichier où stocker les résultats
+FICHIER_RESULTATS = "resultats.csv"
+
+# Définition du quiz avec les nouvelles questions
+quiz = [
+    {"question": "De quelle couleur sont les bananes mûres ?", "options": ["Rouge", "Bleu", "Jaune"], "answer": 3},
+    {"question": "En quelle année Christophe Colomb a-t-il découvert l'Amérique ?", "options": ["1492", "1500", "1600"], "answer": 1}
+]
+
+def jouer_quiz():
+    """Fonction pour jouer au quiz et enregistrer le score dans un fichier CSV."""
+    nom = input("Entrez votre nom : ")
+    score = 0
+
+    for i, q in enumerate(quiz, start=1):
+        print(f"\nQuestion {i}: {q['question']}")
+        for idx, option in enumerate(q["options"], start=1):
+            print(f"{idx}) {option}")
+
+        while True:
+            try:
+                answer = int(input("Votre réponse (1/2/3) : "))
+                if 1 <= answer <= 3:
+                    break
+                else:
+                    print("Veuillez entrer un nombre entre 1 et 3.")
+            except ValueError:
+                print("Veuillez entrer un nombre valide.")
+
+        if answer == q["answer"]:
+            print("✅ Bonne réponse !")
+            score += 1
+        else:
+            print("❌ Mauvaise réponse.")
+
+    print(f"\n{nom}, votre score final : {score}/{len(quiz)}")
+    
+    # Enregistrer le score dans le fichier CSV
+    date = "2024-04-15"  # Date statique, mais tu peux la changer dynamiquement si nécessaire
+    with open(FICHIER_RESULTATS, mode="a", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerow([nom, "Général", score, date])  # Thème général pour ces questions
+
+    print("✅ Résultat enregistré dans le fichier CSV !")
+
+def voir_resultats():
+    """Fonction pour afficher les résultats enregistrés depuis le fichier CSV."""
+    if not os.path.exists(FICHIER_RESULTATS):
+        print("Aucun résultat trouvé.")
+        return
+
+    with open(FICHIER_RESULTATS, mode="r") as file:
+        reader = csv.reader(file)
+        next(reader)  # Saute l'en-tête
+        print("\n📊 Résultats des joueurs :")
+        for row in reader:
+            utilisateur, theme, score, date = row
+            print(f"Utilisateur: {utilisateur} | Thème: {theme} | Score: {score} | Date: {date}")
+
+# Menu principal
+while True:
+    print("\n1) Jouer au quiz")
+    print("2) Voir les résultats")
+    print("3) Quitter")
+    
+    choix = input("Choisissez une option : ")
+    
+    if choix == "1":
+        jouer_quiz()
+    elif choix == "2":
+        voir_resultats()
+    elif choix == "3":
+        print("À bientôt ! 👋")
+        break
+    else:
+        print("❌ Option invalide, essayez encore.")
